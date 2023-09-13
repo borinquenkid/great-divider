@@ -18,10 +18,10 @@ public class GreatDividerGui {
     private static void createAndRun() {
         JFrame f = new JFrame();//creating instance of JFrame
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        f.setSize(400, 500);//400 width and 500 height
+        f.setLayout(new GridLayout(5,1));//using no layout managers
         JTextField t1, t2;
         t1 = new JTextField("");
-        t1.setBounds(50, 100, 100, 30);
         t1.setInputVerifier(new InputVerifier() {
             @Override
             public boolean verify(JComponent input) {
@@ -29,7 +29,6 @@ public class GreatDividerGui {
             }
         });
         t2 = new JTextField("");
-        t2.setBounds(50, 150, 100, 30);
         t2.setInputVerifier(new InputVerifier() {
             @Override
             public boolean verify(JComponent input) {
@@ -43,16 +42,13 @@ public class GreatDividerGui {
 
         JButton b = new JButton("calculate");
         f.getRootPane().setDefaultButton(b);
-        b.setBounds(50, 200, 100, 40);
         final JLabel answer = new JLabel();
-        answer.setBounds(50, 250, 200, 30);
         answer.setText("Not Clicked");
 
         f.add(answer);
         JProgressBar progressBar = new JProgressBar(0, 100);
         progressBar.setValue(0);
         progressBar.setStringPainted(true);
-        progressBar.setBounds(50, 300, 200, 30);
 
         b.addActionListener(new ActionListener() {
             @Override
@@ -69,8 +65,7 @@ public class GreatDividerGui {
 
 
 
-        f.setSize(400, 500);//400 width and 500 height
-        f.setLayout(null);//using no layout managers
+
         f.setVisible(true);//making the frame visible
     }
 
