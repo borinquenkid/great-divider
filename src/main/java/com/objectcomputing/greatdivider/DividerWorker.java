@@ -31,7 +31,8 @@ public class DividerWorker extends SwingWorker<BigDecimal, Void> {
 
     @Override
     protected BigDecimal doInBackground() throws Exception {
-        answer.setText("");
+        answer.setText("        ");
+        progressBar.setValue(0);
         f.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         b.setEnabled(false);
         b.setText("Calculating");
@@ -44,10 +45,10 @@ public class DividerWorker extends SwingWorker<BigDecimal, Void> {
             progressBar.setValue(20 * index);
         });
 
-        BigDecimal numerator = new BigDecimal(t1.getText());
-        BigDecimal denominator = new BigDecimal(t2.getText());
-        if (!denominator.equals(new BigDecimal(0))) {
-            return numerator.divide(denominator, 7, RoundingMode.HALF_UP);
+        BigDecimal dividend = new BigDecimal(t1.getText());
+        BigDecimal divisor = new BigDecimal(t2.getText());
+        if (!divisor.equals(new BigDecimal(0))) {
+            return dividend.divide(divisor, 7, RoundingMode.HALF_UP);
         }
         return null;
     }

@@ -1,12 +1,11 @@
 package com.objectcomputing.greatdivider;
 
+import net.miginfocom.swing.MigLayout;
+import static org.apache.commons.lang3.math.NumberUtils.*;
+
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.regex.Pattern;
 
 public class GreatDividerGui {
@@ -16,56 +15,42 @@ public class GreatDividerGui {
     }
 
     private static void createAndRun() {
-        JFrame f = new JFrame();//creating instance of JFrame
+        JFrame f = new JFrame();
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setSize(400, 500);//400 width and 500 height
-        f.setLayout(new GridLayout(5,1));//using no layout managers
+        f.setSize(300, 300);
+        f.setLayout(new MigLayout());
         JTextField t1, t2;
-        t1 = new JTextField("");
-        t1.setInputVerifier(new InputVerifier() {
-            @Override
-            public boolean verify(JComponent input) {
-                return (isNumeric(t1.getText()));
-            }
-        });
-        t2 = new JTextField("");
-        t2.setInputVerifier(new InputVerifier() {
-            @Override
-            public boolean verify(JComponent input) {
-                String text = t2.getText();
-                boolean isNumber = isNumeric(text);
-                return (isNumber && (!new BigDecimal(text).equals(new BigDecimal(0))));
-            }
-        });
-        f.add(t1);
-        f.add(t2);
+        t1 = new JTextField(3);
+
+        t2 = new JTextField(3);
+        f.add(t1, "cell 0 0");
+        f.add(t2, "cell 0 1");
 
         JButton b = new JButton("calculate");
         f.getRootPane().setDefaultButton(b);
         final JLabel answer = new JLabel();
-        answer.setText("Not Clicked");
+        answer.setText("    ");
 
-        f.add(answer);
+        f.add(answer, "cell 0 2");
         JProgressBar progressBar = new JProgressBar(0, 100);
         progressBar.setValue(0);
         progressBar.setStringPainted(true);
 
-        b.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                DividerWorker worker = new DividerWorker(t1, t2, answer, b, progressBar, f);
-                worker.execute();
+        b.addActionListener(e -> {
+            boolean anyBlanks = !isCreatable(t1.getText())
+                    || !isCreatable(t2.getText());
+            if (anyBlanks) {
+                answer.setText("Fill in both dividend and divisor");
+            } else if(createInteger(t2.getText()) == 0) {
+                answer.setText("Can not divide by zero");
+            } else {
+                new DividerWorker(t1, t2, answer, b, progressBar, f).execute();
             }
+
         });
 
-        f.add(b);//adding button in JFrame
-        f.add(progressBar);
-
-
-
-
-
+        f.add(b, "cell 0 3");//adding button in JFrame
+        f.add(progressBar, "cell 0 4");
         f.setVisible(true);//making the frame visible
     }
 
