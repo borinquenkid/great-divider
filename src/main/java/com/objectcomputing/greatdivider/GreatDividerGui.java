@@ -12,6 +12,10 @@ import java.util.regex.Pattern;
 public class GreatDividerGui {
 
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> createAndRun());
+    }
+
+    private static void createAndRun() {
         JFrame f = new JFrame();//creating instance of JFrame
 
         JTextField t1, t2;
@@ -47,22 +51,8 @@ public class GreatDividerGui {
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                EventQueue.invokeLater(() -> {
-                    try {
-                        Thread.sleep(5 * 1000);
-                    } catch (InterruptedException ex) {
-                        // don't care
-                    }
-                    DecimalFormat df = new DecimalFormat("#.######E00");
-                    BigDecimal numerator = new BigDecimal(t1.getText());
-                    BigDecimal denominator = new BigDecimal(t2.getText());
-                    if (!denominator.equals(new BigDecimal(0))) {
-                        BigDecimal divide = numerator.divide(denominator, 7, RoundingMode.HALF_UP);
-                        answer.setText(df.format(divide));
-                    } else {
-                        answer.setText("Cant divide by zero");
-                    }
-                });
+                DividerWorker worker = new DividerWorker(t1,t2,answer, b);
+                worker.execute();
             }
         });
 
