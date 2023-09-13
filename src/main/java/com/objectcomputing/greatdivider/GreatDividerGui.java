@@ -17,6 +17,7 @@ public class GreatDividerGui {
 
     private static void createAndRun() {
         JFrame f = new JFrame();//creating instance of JFrame
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JTextField t1, t2;
         t1 = new JTextField("");
@@ -48,15 +49,24 @@ public class GreatDividerGui {
         answer.setText("Not Clicked");
 
         f.add(answer);
+        JProgressBar progressBar = new JProgressBar(0, 100);
+        progressBar.setValue(0);
+        progressBar.setStringPainted(true);
+        progressBar.setBounds(50, 300, 200, 30);
+
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DividerWorker worker = new DividerWorker(t1,t2,answer, b);
+
+                DividerWorker worker = new DividerWorker(t1, t2, answer, b, progressBar, f);
                 worker.execute();
             }
         });
 
         f.add(b);//adding button in JFrame
+        f.add(progressBar);
+
+
 
 
         f.setSize(400, 500);//400 width and 500 height
