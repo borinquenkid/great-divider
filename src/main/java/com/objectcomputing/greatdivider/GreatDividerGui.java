@@ -4,8 +4,6 @@ import net.miginfocom.swing.MigLayout;
 import static org.apache.commons.lang3.math.NumberUtils.*;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.regex.Pattern;
 
 public class GreatDividerGui {
