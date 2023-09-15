@@ -12,25 +12,33 @@ public class DividerWorker extends SwingWorker<BigDecimal, Void> {
 
     private final JTextField t1;
     private final JTextField t2;
-    private final JLabel answer;
+    private final JTextField answer;
     private final JButton b;
     private final JProgressBar progressBar;
+    private final JLabel status;
     private final JFrame f;
 
     private final DecimalFormat df = new DecimalFormat("#.######E00");
 
-    public DividerWorker(JTextField t1, JTextField t2, JLabel answer, JButton b, JProgressBar progressBar, JFrame f) {
+    public DividerWorker(JTextField t1,
+                         JTextField t2,
+                         JTextField answer,
+                         JButton b,
+                         JProgressBar progressBar,
+                         JLabel status,
+                         JFrame f) {
 
         this.t1 = t1;
         this.t2 = t2;
         this.answer = answer;
         this.b = b;
         this.progressBar = progressBar;
+        this.status = status;
         this.f = f;
     }
 
     @Override
-    protected BigDecimal doInBackground() throws Exception {
+    protected BigDecimal doInBackground() {
         answer.setText("        ");
         progressBar.setValue(0);
         f.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -60,8 +68,11 @@ public class DividerWorker extends SwingWorker<BigDecimal, Void> {
             divide = get();
         } catch (InterruptedException | ExecutionException ignore) {
         }
-        String label = divide != null ? df.format(divide) : "Cant divide by zero";
-        answer.setText(label);
+
+        String label = divide != null ? "" : "Cant divide by zero";
+        status.setText(label);
+        String answerText = divide != null ? df.format(divide) : "";
+        answer.setText(answerText);
         b.setEnabled(true);
         b.setText("Calculate");
         f.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
