@@ -39,11 +39,6 @@ public class DividerWorker extends SwingWorker<BigDecimal, Void> {
 
     @Override
     protected BigDecimal doInBackground() {
-        answerField.setText("        ");
-        progressBar.setValue(0);
-        f.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        calculateButton.setEnabled(false);
-        calculateButton.setText("Calculating");
         IntStream.rangeClosed(1,5).boxed().forEach( index -> {
             try {
                 Thread.sleep(1000);
@@ -52,7 +47,6 @@ public class DividerWorker extends SwingWorker<BigDecimal, Void> {
             }
             progressBar.setValue(20 * index);
         });
-
         BigDecimal dividend = new BigDecimal(dividendField.getText());
         BigDecimal divisor = new BigDecimal(divisorField.getText());
         if (!divisor.equals(new BigDecimal(0))) {
@@ -73,6 +67,8 @@ public class DividerWorker extends SwingWorker<BigDecimal, Void> {
         statusLabel.setText(label);
         String answerText = divide != null ? df.format(divide) : "";
         answerField.setText(answerText);
+        dividendField.setEnabled(true);
+        divisorField.setEnabled(true);
         calculateButton.setEnabled(true);
         calculateButton.setText("Calculate");
         f.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));

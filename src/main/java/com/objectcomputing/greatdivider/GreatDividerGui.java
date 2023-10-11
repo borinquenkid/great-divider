@@ -4,6 +4,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 
+import java.awt.*;
+
 import static com.objectcomputing.greatdivider.DivisionWarningEnum.OK;
 import static com.objectcomputing.greatdivider.MigLayoutUtil.*;
 
@@ -19,39 +21,46 @@ public class GreatDividerGui {
         f.setSize(300, 300);
         JPanel p = createTabPanel(new MigLayout("inset 20"));
         f.add(p);
-        JTextField t1 = createTextField("",3);
-        JTextField  t2 = createTextField("",3);
-        JTextField  answer = createTextField("",10);
-        answer.setEnabled(false);
+        JTextField dividendField = createTextField("",3);
+        JTextField  divisorField = createTextField("",3);
+        JTextField  answerField = createTextField("",10);
+        answerField.setEnabled(false);
 
         p.add(createLabel("Dividend",SwingConstants.LEADING), "gap para");
-        p.add(t1, "span");
+        p.add(dividendField, "span");
         p.add(createLabel("Divisor",SwingConstants.LEADING), "gap para");
-        p.add(t2, "span");
+        p.add(divisorField, "span");
         p.add(createLabel("Answer",SwingConstants.LEADING), "gap para");
-        p.add(answer,"span");
+        p.add(answerField,"span");
         p.add(createLabel("Status",SwingConstants.LEADING), "gap para");
         JLabel status = createLabel("",SwingConstants.LEADING);
         p.add(status, "span");
 
 
-        JButton b = new JButton("calculate");
-        p.getRootPane().setDefaultButton(b);
+        JButton calculateButton = new JButton("calculate");
+        p.getRootPane().setDefaultButton(calculateButton);
 
         JProgressBar progressBar = new JProgressBar(0, 100);
         progressBar.setValue(0);
         progressBar.setStringPainted(true);
 
-        b.addActionListener(e -> {
-            DivisionWarningEnum result = new DivisionWarningGenerator().apply(t1.getText(), t2.getText());
+        calculateButton.addActionListener(e -> {
+            DivisionWarningEnum result = new DivisionWarningGenerator().apply(dividendField.getText(), divisorField.getText());
             if (result.equals(OK)) {
-                new DividerWorker(t1, t2, answer, b, progressBar,status, f).execute();
+                answerField.setText("        ");
+                progressBar.setValue(0);
+                f.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                dividendField.setEnabled(false);
+                divisorField.setEnabled(false);
+                calculateButton.setEnabled(false);
+                calculateButton.setText("Calculating");
+                new DividerWorker(dividendField, divisorField, answerField, calculateButton, progressBar,status, f).execute();
             } else {
                 status.setText(result.getMessage());
             }
         });
 
-        p.add(b, "span");//adding button in JFrame
+        p.add(calculateButton, "span");//adding button in JFrame
         p.add(progressBar, "span");
         f.setVisible(true);//making the frame visible
     }
