@@ -19,6 +19,15 @@ public class GreatDividerGui {
         JFrame f = new JFrame();
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setSize(300, 300);
+        JPanel glassPanel = new JPanel() {
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor(GP_COLOR);
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        glassPanel.setOpaque(false);
+        f.setGlassPane(glassPanel);
         JPanel p = createTabPanel(new MigLayout("inset 20"));
         f.add(p);
         JTextField dividendField = createTextField("",3);
@@ -47,6 +56,7 @@ public class GreatDividerGui {
         calculateButton.addActionListener(e -> {
             DivisionWarningEnum result = new DivisionWarningGenerator().apply(dividendField.getText(), divisorField.getText());
             if (result.equals(OK)) {
+                f.getGlassPane().setVisible(true);
                 answerField.setText("        ");
                 progressBar.setValue(0);
                 f.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -64,4 +74,6 @@ public class GreatDividerGui {
         p.add(progressBar, "span");
         f.setVisible(true);//making the frame visible
     }
+    protected static final Color GP_COLOR = new Color(0, 0, 0, 30);
+
 }

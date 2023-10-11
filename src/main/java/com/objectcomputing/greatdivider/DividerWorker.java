@@ -72,5 +72,6 @@ public class DividerWorker extends SwingWorker<BigDecimal, Void> {
         calculateButton.setEnabled(true);
         calculateButton.setText("Calculate");
         f.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        f.getGlassPane().setVisible(false);
     }
 }
