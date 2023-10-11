@@ -10,40 +10,40 @@ import java.util.stream.IntStream;
 
 public class DividerWorker extends SwingWorker<BigDecimal, Void> {
 
-    private final JTextField t1;
-    private final JTextField t2;
-    private final JTextField answer;
-    private final JButton b;
+    private final JTextField dividendField;
+    private final JTextField divisorField;
+    private final JTextField answerField;
+    private final JButton calculateButton;
     private final JProgressBar progressBar;
-    private final JLabel status;
+    private final JLabel statusLabel;
     private final JFrame f;
 
     private final DecimalFormat df = new DecimalFormat("#.######E00");
 
-    public DividerWorker(JTextField t1,
-                         JTextField t2,
+    public DividerWorker(JTextField dividendField,
+                         JTextField divisorField,
                          JTextField answer,
-                         JButton b,
+                         JButton calculateButton,
                          JProgressBar progressBar,
-                         JLabel status,
+                         JLabel statusLabel,
                          JFrame f) {
 
-        this.t1 = t1;
-        this.t2 = t2;
-        this.answer = answer;
-        this.b = b;
+        this.dividendField = dividendField;
+        this.divisorField = divisorField;
+        this.answerField = answer;
+        this.calculateButton = calculateButton;
         this.progressBar = progressBar;
-        this.status = status;
+        this.statusLabel = statusLabel;
         this.f = f;
     }
 
     @Override
     protected BigDecimal doInBackground() {
-        answer.setText("        ");
+        answerField.setText("        ");
         progressBar.setValue(0);
         f.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        b.setEnabled(false);
-        b.setText("Calculating");
+        calculateButton.setEnabled(false);
+        calculateButton.setText("Calculating");
         IntStream.rangeClosed(1,5).boxed().forEach( index -> {
             try {
                 Thread.sleep(1000);
@@ -53,8 +53,8 @@ public class DividerWorker extends SwingWorker<BigDecimal, Void> {
             progressBar.setValue(20 * index);
         });
 
-        BigDecimal dividend = new BigDecimal(t1.getText());
-        BigDecimal divisor = new BigDecimal(t2.getText());
+        BigDecimal dividend = new BigDecimal(dividendField.getText());
+        BigDecimal divisor = new BigDecimal(divisorField.getText());
         if (!divisor.equals(new BigDecimal(0))) {
             return dividend.divide(divisor, 7, RoundingMode.HALF_UP);
         }
@@ -70,11 +70,11 @@ public class DividerWorker extends SwingWorker<BigDecimal, Void> {
         }
 
         String label = divide != null ? "" : "Cant divide by zero";
-        status.setText(label);
+        statusLabel.setText(label);
         String answerText = divide != null ? df.format(divide) : "";
-        answer.setText(answerText);
-        b.setEnabled(true);
-        b.setText("Calculate");
+        answerField.setText(answerText);
+        calculateButton.setEnabled(true);
+        calculateButton.setText("Calculate");
         f.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 }

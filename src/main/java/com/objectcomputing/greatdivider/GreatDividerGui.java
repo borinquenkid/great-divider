@@ -1,10 +1,10 @@
 package com.objectcomputing.greatdivider;
 
 import net.miginfocom.swing.MigLayout;
-import static org.apache.commons.lang3.math.NumberUtils.*;
 
 import javax.swing.*;
 
+import static com.objectcomputing.greatdivider.DivisionWarningEnum.OK;
 import static com.objectcomputing.greatdivider.MigLayoutUtil.*;
 
 public class GreatDividerGui {
@@ -43,15 +43,12 @@ public class GreatDividerGui {
         progressBar.setStringPainted(true);
 
         b.addActionListener(e -> {
-            boolean anyBlanks = !isCreatable(t1.getText()) || !isCreatable(t2.getText());
-            if (anyBlanks) {
-                status.setText("Fill in both dividend and divisor");
-            } else if(createInteger(t2.getText()) == 0) {
-                status.setText("Can not divide by zero");
-            } else {
+            DivisionWarningEnum result = new DivisionWarningGenerator().apply(t1.getText(), t2.getText());
+            if (result.equals(OK)) {
                 new DividerWorker(t1, t2, answer, b, progressBar,status, f).execute();
+            } else {
+                status.setText(result.getMessage());
             }
-
         });
 
         p.add(b, "span");//adding button in JFrame
