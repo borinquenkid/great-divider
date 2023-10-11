@@ -20,7 +20,7 @@ dependencies {
     implementation ("com.google.guava:guava:32.1.2-jre")
     implementation ("com.miglayout:miglayout-swing:11.1")
 
-    testImplementation platform("org.junit:junit-bom:5.9.1")
+    testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation ("org.junit.jupiter:junit-jupiter")
 }
 

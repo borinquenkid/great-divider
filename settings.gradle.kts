@@ -1,0 +1,2 @@
+rootProject.setName("great-divider")
+
