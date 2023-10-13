@@ -4,16 +4,8 @@ import com.objectcomputing.greatdivider.worker.ActiveInactiveStateListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class RootFrame extends JFrame implements ActiveInactiveStateListener {
-
-    private final List<ActiveInactiveStateListener> activeInactiveStateListeners = new ArrayList<>();
-
-    public List<ActiveInactiveStateListener> getActiveInactiveStateListeners() {
-        return activeInactiveStateListeners;
-    }
 
     public RootFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

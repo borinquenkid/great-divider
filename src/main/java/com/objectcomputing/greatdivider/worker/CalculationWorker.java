@@ -30,6 +30,7 @@ public class CalculationWorker extends SwingWorker<BigDecimal, Void> {
         this.answerListener = answerListener;
     }
 
+    //only used for testing
     public void doSync() {
         doInBackground();
     }
@@ -42,9 +43,12 @@ public class CalculationWorker extends SwingWorker<BigDecimal, Void> {
         IntStream.range(0, commands.size())
                 .forEach(i -> {
                     String e = commands.get(i);
-                    if (Operation.getOperation(e) == null) {
+                    Operation token = Operation.getOperation(e);
+                    if (token == null || token == Operation.DEC) {
                         //A NUMBER  OR DECIMAL
-                        if (compressed.isEmpty() || Operation.getOperation(compressed.getLast()) != null) {
+                        if (compressed.isEmpty()
+                                || Operation.getOperation(compressed.getLast()) != null
+                        ) {
                             compressed.add(e);
                         } else {
                             compressed.add(compressed.removeLast() + e);
@@ -64,11 +68,11 @@ public class CalculationWorker extends SwingWorker<BigDecimal, Void> {
             .forEach(i -> {
                 String e = compressed.get(i);
                 Operation opOrNumber = Operation.getOperation(e);
-                if (ref.total == null && ref.operation == null & opOrNumber == null) {
+                if (ref.total == null) {
                     ref.total = new BigDecimal(e);
-                } else if (ref.total != null && opOrNumber != null) {
+                } else if (opOrNumber != null) {
                     ref.operation = opOrNumber;
-                } else if (ref.total != null) {
+                } else {
                     // ARITHMETIC
                     if (ref.operation == Operation.PLUS) {
                         ref.total = ref.total.add(new BigDecimal(e));
@@ -81,9 +85,6 @@ public class CalculationWorker extends SwingWorker<BigDecimal, Void> {
                     } else {
                         throw new RuntimeException("BAD OPERATIONS 1");
                     }
-                } else {
-                    System.out.println("BAD OPERATIONS 6");
-                    throw new RuntimeException("BAD OPERATIONS");
                 }
                 progressListener.setProgress(50 + (i * stepSize2));
             });

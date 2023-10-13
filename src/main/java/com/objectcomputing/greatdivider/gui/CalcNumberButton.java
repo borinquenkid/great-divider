@@ -7,10 +7,10 @@ import javax.swing.*;
 public class CalcNumberButton extends JButton
         implements ActiveInactiveStateListener {
 
-    public CalcNumberButton(String number, PrimitivePanel primitivePanel) {
+    public CalcNumberButton(String number, AnswerField answerField) {
         super(number);
-        addActionListener(primitivePanel.getAnswerField());
-        primitivePanel.getRootFrame().getActiveInactiveStateListeners().add(this);
+        addActionListener(answerField);
+        answerField.getActiveInactiveStateListeners().add(this);
     }
 
     @Override

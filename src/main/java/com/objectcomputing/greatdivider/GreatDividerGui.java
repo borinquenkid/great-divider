@@ -16,7 +16,6 @@ public class GreatDividerGui {
         JPanel primitivePanel = new PrimitivePanel(rootFrame);
         rootFrame.add(primitivePanel);
         rootFrame.setVisible(true);
-
     }
 
 

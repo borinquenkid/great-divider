@@ -8,11 +8,11 @@ public class CalcOperationButton extends JButton implements ActiveInactiveStateL
 
     private final String name;
 
-    public CalcOperationButton(String name, PrimitivePanel primitivePanel) {
+    public CalcOperationButton(String name, AnswerField answerField) {
         super(name);
         setActionCommand(name);
-        addActionListener(primitivePanel.getAnswerField());
-        primitivePanel.getRootFrame().getActiveInactiveStateListeners().add(this);
+        addActionListener(answerField);
+        answerField.getActiveInactiveStateListeners().add(this);
         this.name = name;
     }
 
