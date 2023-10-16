@@ -22,4 +22,9 @@ public class RootFrame extends JFrame implements ActiveInactiveStateListener {
     public void inactivate() {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }
+
+    @Override
+    public String getText() {
+        return null;
+    }
 }

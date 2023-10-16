@@ -5,4 +5,6 @@ public interface ActiveInactiveStateListener {
     void activate();
     
     void inactivate();
+
+    String getText();
 }

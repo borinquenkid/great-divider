@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class AnswerField extends JTextField implements ActionListener, AnswerListener {
 
@@ -33,8 +34,12 @@ public class AnswerField extends JTextField implements ActionListener, AnswerLis
         Object source = e.getSource();
         if (source instanceof  CalcOperationButton || source instanceof  CalcNumberButton) {
             String actionCommand = e.getActionCommand();
-            if (Operation.getOperation(actionCommand) == Operation.CALCULATE) {
-                setAnswer("   ");
+            Operation operation = Operation.getOperation(actionCommand);
+            if (operation == Operation.CALCULATE) {
+                activeInactiveStateListeners.stream()
+                        .filter( it -> Objects.equals(it.getText(), "0"))
+                        .forEach(ActiveInactiveStateListener::activate);
+                setAnswer("");
                 activeInactiveStateListeners.forEach(ActiveInactiveStateListener::inactivate);
 
                 new CalculationWorker(new LinkedList<>(commands)
@@ -42,18 +47,50 @@ public class AnswerField extends JTextField implements ActionListener, AnswerLis
                         , progressListener
                         , this).execute();
                 commands.clear();
-            } else if (Operation.getOperation(actionCommand) == Operation.CLEAR) {
-                setText("     ");
+            } else if (operation == Operation.CLEAR) {
+                activeInactiveStateListeners.stream()
+                        .filter( it -> Objects.equals(it.getText(), "0"))
+                        .forEach(ActiveInactiveStateListener::activate);
+                setText("");
                 commands.clear();
-                setAnswer("   ");
-            }
-            else {
+            }   else if (operation == Operation.DEC) {
+                activeInactiveStateListeners.stream()
+                        .filter( it -> Objects.equals(it.getText(), "0"))
+                        .forEach(ActiveInactiveStateListener::activate);
                 if (commands.isEmpty()) {
-                    setAnswer("   ");
+                    String text = "0.";
+                    commands.add(text);
+                    setText(text);
+                } else {
+                    String text = commands.removeLast() + ".";
+                    commands.add(text);
+                    setText(text);
+                }
+            } else if (operation == null && Objects.equals(actionCommand, "0") ) {
+                if (commands.isEmpty()) {
+                    activeInactiveStateListeners.stream()
+                            .filter(it -> Objects.equals(it.getText(), "0"))
+                            .forEach(ActiveInactiveStateListener::inactivate);
+                    String text = "0";
+                    commands.add(text);
+                    setText(text);
+                } else {
+                    //DEC
+                    String text = commands.removeLast() + "0";
+                    commands.add(text);
+                    setText(text);
+                }
+
+            } else {
+                activeInactiveStateListeners.stream()
+                        .filter( it -> Objects.equals(it.getText(), "0"))
+                        .forEach(ActiveInactiveStateListener::activate);
+                if (commands.isEmpty()) {
+                    setText("");
                 }
                 commands.add(actionCommand);
-                setAnswer(getText()+ actionCommand);
-                if (Operation.getOperation(actionCommand) != null) {
+                setText(getText()+ actionCommand);
+                if (operation != null) {
                     activeInactiveStateListeners.stream()
                             .filter( it -> it instanceof CalcOperationButton)
                             .forEach(ActiveInactiveStateListener::inactivate);

@@ -29,4 +29,9 @@ public class GlassPanel extends JPanel
     public void inactivate() {
         setVisible(false);
     }
+
+    @Override
+    public String getText() {
+        return null;
+    }
 }
