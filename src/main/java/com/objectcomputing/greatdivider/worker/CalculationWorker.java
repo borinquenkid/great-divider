@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class CalculationWorker extends SwingWorker<BigDecimal, Void> {
+public class CalculationWorker extends SwingWorker<String, Void> {
 
     private final LinkedList<String> commands;
     private final List<ActiveInactiveStateListener> activeInactiveStateListenerList;
@@ -36,7 +36,7 @@ public class CalculationWorker extends SwingWorker<BigDecimal, Void> {
     }
 
     @Override
-    protected BigDecimal doInBackground() {
+    protected String doInBackground() {
         LinkedList<String> compressed = new LinkedList<>();
 
         final int stepSize1 = 50 / commands.size();
@@ -62,13 +62,17 @@ public class CalculationWorker extends SwingWorker<BigDecimal, Void> {
         var ref = new Object() {
             BigDecimal total = null;
             Operation operation = null;
+
+            String error = null;
         };
         final int stepSize2 = 50 / compressed.size();
         IntStream.range(0, compressed.size())
             .forEach(i -> {
                 String e = compressed.get(i);
                 Operation opOrNumber = Operation.getOperation(e);
-                if (ref.total == null) {
+                if (ref.error != null) {
+                    //SKIP ERROR
+                } else if (ref.total == null) {
                     ref.total = new BigDecimal(e);
                 } else if (opOrNumber != null) {
                     ref.operation = opOrNumber;
@@ -83,29 +87,29 @@ public class CalculationWorker extends SwingWorker<BigDecimal, Void> {
                     } else if (ref.operation == Operation.DIV) {
                         BigDecimal divisor = new BigDecimal(e);
                         if (divisor.compareTo(BigDecimal.ZERO) == 0) {
-                            throw new RuntimeException("DIVIDE BY ZERO");
+                            ref.error = "DIVIDE BY ZERO";
+                        } else {
+                            ref.total = ref.total.divide(divisor, 7, RoundingMode.HALF_UP);
                         }
-                        ref.total = ref.total.divide(divisor, 7, RoundingMode.HALF_UP);
                     } else {
-                        throw new RuntimeException("BAD OPERATIONS 1");
+                        ref.error ="BAD OPERATION";
                     }
                 }
                 progressListener.setProgress(50 + (i * stepSize2));
             });
-        return ref.total;
+        return ref.error != null ? ref.error :  df.format(ref.total);
     }
 
     @Override
     protected void done() {
-        BigDecimal result = null;
+        String answer = null;
         try {
-            result = get();
+            answer = get();
         } catch (Throwable e) {
 //This should not happen
         }
         activeInactiveStateListenerList.forEach(ActiveInactiveStateListener::activate);
         progressListener.setProgress(0);
-        String answerText = result != null ? df.format(result) : "";
-        answerListener.setAnswer(answerText);
+        answerListener.setAnswer(answer);
     }
 }
