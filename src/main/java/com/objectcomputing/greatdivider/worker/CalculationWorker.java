@@ -81,7 +81,11 @@ public class CalculationWorker extends SwingWorker<BigDecimal, Void> {
                     } else if (ref.operation == Operation.MULTI) {
                         ref.total = ref.total.multiply(new BigDecimal(e));
                     } else if (ref.operation == Operation.DIV) {
-                        ref.total = ref.total.divide(new BigDecimal(e), 7, RoundingMode.HALF_UP);
+                        BigDecimal divisor = new BigDecimal(e);
+                        if (divisor.compareTo(BigDecimal.ZERO) == 0) {
+                            throw new RuntimeException("DIVIDE BY ZERO");
+                        }
+                        ref.total = ref.total.divide(divisor, 7, RoundingMode.HALF_UP);
                     } else {
                         throw new RuntimeException("BAD OPERATIONS 1");
                     }

@@ -36,9 +36,6 @@ public class AnswerField extends JTextField implements ActionListener, AnswerLis
             String actionCommand = e.getActionCommand();
             Operation operation = Operation.getOperation(actionCommand);
             if (operation == Operation.CALCULATE) {
-                activeInactiveStateListeners.stream()
-                        .filter( it -> Objects.equals(it.getText(), "0"))
-                        .forEach(ActiveInactiveStateListener::activate);
                 setAnswer("");
                 activeInactiveStateListeners.forEach(ActiveInactiveStateListener::inactivate);
 
@@ -48,15 +45,10 @@ public class AnswerField extends JTextField implements ActionListener, AnswerLis
                         , this).execute();
                 commands.clear();
             } else if (operation == Operation.CLEAR) {
-                activeInactiveStateListeners.stream()
-                        .filter( it -> Objects.equals(it.getText(), "0"))
-                        .forEach(ActiveInactiveStateListener::activate);
+
                 setText("");
                 commands.clear();
             }   else if (operation == Operation.DEC) {
-                activeInactiveStateListeners.stream()
-                        .filter( it -> Objects.equals(it.getText(), "0"))
-                        .forEach(ActiveInactiveStateListener::activate);
                 if (commands.isEmpty()) {
                     String text = "0.";
                     commands.add(text);
@@ -66,25 +58,8 @@ public class AnswerField extends JTextField implements ActionListener, AnswerLis
                     commands.add(text);
                     setText(text);
                 }
-            } else if (operation == null && Objects.equals(actionCommand, "0") ) {
-                if (commands.isEmpty()) {
-                    activeInactiveStateListeners.stream()
-                            .filter(it -> Objects.equals(it.getText(), "0"))
-                            .forEach(ActiveInactiveStateListener::inactivate);
-                    String text = "0";
-                    commands.add(text);
-                    setText(text);
-                } else {
-                    //DEC
-                    String text = commands.removeLast() + "0";
-                    commands.add(text);
-                    setText(text);
-                }
+            }  else {
 
-            } else {
-                activeInactiveStateListeners.stream()
-                        .filter( it -> Objects.equals(it.getText(), "0"))
-                        .forEach(ActiveInactiveStateListener::activate);
                 if (commands.isEmpty()) {
                     setText("");
                 }

@@ -18,8 +18,13 @@ repositories {
 dependencies {
     implementation ("com.miglayout:miglayout-swing:11.1")
 
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation ("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.6.0")
+
+
 }
 
 tasks.test {
