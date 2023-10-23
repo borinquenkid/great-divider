@@ -56,7 +56,9 @@ public class CalculationWorker extends SwingWorker<String, Void> {
                     } else {
                         compressed.add(e);
                     }
+                    try {Thread.sleep(100);} catch (Throwable t){}
                     progressListener.setProgress(i * stepSize1);
+
                 });
 
         var ref = new Object() {
@@ -95,6 +97,7 @@ public class CalculationWorker extends SwingWorker<String, Void> {
                         ref.error ="BAD OPERATION";
                     }
                 }
+                try {Thread.sleep(100);} catch (Throwable t){}
                 progressListener.setProgress(50 + (i * stepSize2));
             });
         return ref.error != null ? ref.error :  df.format(ref.total);

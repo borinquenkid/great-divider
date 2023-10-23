@@ -1,9 +1,6 @@
 package com.objectcomputing.greatdivider.gui;
 
-import com.objectcomputing.greatdivider.worker.ActiveInactiveStateListener;
-import com.objectcomputing.greatdivider.worker.AnswerListener;
-import com.objectcomputing.greatdivider.worker.CalculationWorker;
-import com.objectcomputing.greatdivider.worker.ProgressListener;
+import com.objectcomputing.greatdivider.worker.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -11,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 public class AnswerField extends JTextField implements ActionListener, AnswerListener {
 
@@ -32,52 +28,25 @@ public class AnswerField extends JTextField implements ActionListener, AnswerLis
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
+        if (commands.isEmpty()) {
+            setText("");
+        }
         if (source instanceof  CalcOperationButton || source instanceof  CalcNumberButton) {
             String actionCommand = e.getActionCommand();
             Operation operation = Operation.getOperation(actionCommand);
+            String currentText = getText();
+            setText(new CalculatorTextGenerator().execute(operation, actionCommand, currentText, commands));
+            new ActivityListenerTrigger().execute(operation,activeInactiveStateListeners);
             if (operation == Operation.CALCULATE) {
-                setAnswer("");
-                activeInactiveStateListeners.forEach(ActiveInactiveStateListener::inactivate);
-
                 new CalculationWorker(new LinkedList<>(commands)
                         , activeInactiveStateListeners
                         , progressListener
                         , this).execute();
-                commands.clear();
-            } else if (operation == Operation.CLEAR) {
-
-                setText("");
-                commands.clear();
-            }   else if (operation == Operation.DEC) {
-                if (commands.isEmpty()) {
-                    String text = "0.";
-                    commands.add(text);
-                    setText(text);
-                } else {
-                    String text = commands.removeLast() + ".";
-                    commands.add(text);
-                    setText(text);
-                }
-            }  else {
-
-                if (commands.isEmpty()) {
-                    setText("");
-                }
-                commands.add(actionCommand);
-                setText(getText()+ actionCommand);
-                if (operation != null) {
-                    activeInactiveStateListeners.stream()
-                            .filter( it -> it instanceof CalcOperationButton)
-                            .forEach(ActiveInactiveStateListener::inactivate);
-                } else {
-                    activeInactiveStateListeners.stream()
-                            .filter( it -> it instanceof CalcOperationButton)
-                            .forEach(ActiveInactiveStateListener::activate);
-
-                }
             }
+            new CommandManager().execute(operation, actionCommand,getText(),commands);
 
-         }
+
+        }
     }
 
 

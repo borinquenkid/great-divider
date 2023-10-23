@@ -17,6 +17,9 @@ repositories {
 
 dependencies {
     implementation ("com.miglayout:miglayout-swing:11.1")
+    implementation("com.jgoodies:jgoodies-forms:1.8.0")
+    implementation("com.jgoodies:jgoodies-common:1.8.1")
+
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation ("org.junit.jupiter:junit-jupiter")
@@ -32,5 +35,6 @@ tasks.test {
 }
 
 application {
-    mainClass.set("com.objectcomputing.greatdivider.GreatDividerGui")
+//    mainClass.set("com.objectcomputing.greatdivider.GreatDividerGui")
+    mainClass.set("com.objectcomputing.jgoodies.GreatDividerJGoodies")
 }
